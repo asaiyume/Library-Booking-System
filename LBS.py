@@ -5,7 +5,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import time
+
 
 ascii_banner = pyfiglet.figlet_format('Library Booking System')
 print(ascii_banner)
@@ -85,7 +88,7 @@ elif level == '5':
 def booking(username, password, level, room, start, end):
     # Go to RBS
     browser = webdriver.Chrome(
-        '\\Users\\mrzeo\\Desktop\\New folder\\chromedriver')
+        'chromedriver.exe')
     browser.get('https://www1.np.edu.sg/npnet/webappanacle/StudentLogin.aspx')
     # Enter Username
     userbutton = browser.find_element_by_id('UserName_c1')
