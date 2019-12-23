@@ -14,7 +14,7 @@ import threading
 ascii_banner = pyfiglet.figlet_format('Library Booking System')
 print(ascii_banner)
 
-with open('C:\\Users\\mrzeo\\Desktop\\New Folder\\accounts.csv') as csvfile:
+with open('accounts.csv') as csvfile:
     acc_details = []
     data = csv.reader(csvfile, delimiter=' ', quotechar=' ')
     for row in data:
@@ -29,33 +29,33 @@ for i in range(len(acc_details)):
     passwords['password{}'.format(i)] = acc_details[i][1]
     start['start{}'.format(i)] = acc_details[i][2]
     end['end{}'.format(i)] = acc_details[i][3]
-timed = {   '0800' : 1,
-            '0830' : 2,
-            '0900' : 3,
-            '0930' : 4,
-            '1000' : 5,
-            '1030' : 6,
-            '1100' : 7,
-            '1130' : 8,
-            '1200' : 9,
-            '1230' : 10,
-            '1300' : 11,
-            '1330' : 12,
-            '1400' : 13,
-            '1430' : 14,
-            '1500' : 15,
-            '1530' : 16,
-            '1600' : 17,
-            '1630' : 18,
-            '1700' : 19,
-            '1730' : 20,
-            '1800' : 21,
-            '1830' : 22,
-            '1900' : 23,
-            '1930' : 24,
-            '2000' : 25,
-            '2030' : 26,
-            '2100' : 27,
+timed = {'0800': 1,
+            '0830': 2,
+            '0900': 3,
+            '0930': 4,
+            '1000': 5,
+            '1030': 6,
+            '1100': 7,
+            '1130': 8,
+            '1200': 9,
+            '1230': 10,
+            '1300': 11,
+            '1330': 12,
+            '1400': 13,
+            '1430': 14,
+            '1500': 15,
+            '1530': 16,
+            '1600': 17,
+            '1630': 18,
+            '1700': 19,
+            '1730': 20,
+            '1800': 21,
+            '1830': 22,
+            '1900': 23,
+            '1930': 24,
+            '2000': 25,
+            '2030': 26,
+            '2100': 27,
             }
 lvl4room = ['1 = Coolidge (5)',
             '2 = Darwin (5)',
@@ -116,7 +116,7 @@ elif level == '5':
 def booking(username, password, level, room, start, end):
     # Go to RBS
     browser = webdriver.Chrome(
-        '\\Users\\mrzeo\\Desktop\\New folder\\chromedriver')
+        'chromedriver.exe')
     browser.get('https://www1.np.edu.sg/npnet/webappanacle/StudentLogin.aspx')
     # Enter Username
     userbutton = browser.find_element_by_id('UserName_c1')
@@ -156,11 +156,12 @@ def booking(username, password, level, room, start, end):
     # Click search
     browser.find_element_by_xpath(
         '//*[@id="BtnQuick"]').click()
-    # Delay to load iFrame
-    source = wait.until(EC.element_to_be_clickable((By.XPATH,
-                                                    '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(start, room))))
-    dest = wait.until(EC.element_to_be_clickable((By.XPATH,
-                                                  '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(end, room))))
+    # Delay to load iFrame'
+    browser.implicitly_wait(10)
+    source = browser.find_element_by_xpath(
+        '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(start, room))
+    dest = browser.find_element_by_xpath(
+        '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(end, room))
 
     # Selecting time slots
     ActionChains(browser).drag_and_drop(source, dest).perform()
@@ -185,7 +186,9 @@ def booking(username, password, level, room, start, end):
     browser.implicitly_wait(10)
     browser.delete_all_cookies()
 
+
 for i in range(len(acc_details)):
     t = threading.Thread(target=booking, args=(usernames['username{}'.format(
         i)], passwords['password{}'.format(i)], level, room, timed[start['start{}'.format(i)]], timed[end['end{}'.format(i)]]))
     t.start()
+
