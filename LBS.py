@@ -80,3 +80,77 @@ if level == '4':
     print('Booking {} for you now.'.format(lvl4room[int(room)-1]))
 elif level == '5':
     print('Booking {} for you now.'.format(lvl5room[int(room)-1]))
+
+
+def booking(username, password, level, room, start, end):
+    # Go to RBS
+    browser = webdriver.Chrome(
+        '\\Users\\mrzeo\\Desktop\\New folder\\chromedriver')
+    browser.get('https://www1.np.edu.sg/npnet/webappanacle/StudentLogin.aspx')
+    # Enter Username
+    userbutton = browser.find_element_by_id('UserName_c1')
+    browser.execute_script(
+        "document.getElementById('UserName_c1').style.display = 'inline-block';")
+    userbutton.send_keys(username)
+    # Enter Password
+    passbutton = browser.find_element_by_id('Password_c1')
+    browser.execute_script(
+        "document.getElementById('Password_c1').style.display = 'inline-block';")
+    passbutton.send_keys(password)
+    passbutton.send_keys(Keys.ENTER)
+    # Wait for page to load
+    wait = WebDriverWait(browser, 20)
+    # Switch to iFrame
+    iframe = wait.until(EC.frame_to_be_available_and_switch_to_it((
+        By.XPATH, "//iframe[@id='frameBottom']")))
+    browser.switch_to.frame(iframe)
+    # Choose Category
+    # Option 2 = Library Resource
+    browser.find_element_by_xpath(
+        '//*[@id="ResourceCategory_c1"]/option[2]').click()
+    # Choose Resource Type
+    # Option 11 = Discussion Room
+    browser.find_element_by_xpath(
+        '//*[@id="DropSpaceType_c1"]/option[11]').click()
+    # Choose Block
+    # Option 2 = Blk 1
+    browser.find_element_by_xpath(
+        '//*[@id="DropDownVenue_c1"]/option[2]').click()
+    # Wait for Level to load
+    # Too fast will reset Levels
+    time.sleep(5)
+    # Choose Levels
+    # Options: Lvl 1 = 1, Lvl 2 = 2...
+    browser.find_element_by_xpath(
+        '//*[@id="DropLevel_c1"]/option[{}]'.format(level)).click()
+    # Click search
+    browser.find_element_by_xpath(
+        '//*[@id="BtnQuick"]').click()
+    # Delay to load iFrame
+    source = wait.until(EC.element_to_be_clickable((By.XPATH,
+                                                    '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(start, room))))
+    dest = wait.until(EC.element_to_be_clickable((By.XPATH,
+                                                  '//*[@id="dpc"]/div[2]/div/div[2]/div/table[1]/tbody/tr[{}]/td[{}]/div/div'.format(end, room))))
+
+    # Selecting time slots
+    ActionChains(browser).drag_and_drop(source, dest).perform()
+
+    browser.implicitly_wait(10)
+    spurpose = browser.find_element_by_xpath(
+        '//*[@id="bookingFormControl1_TextboxPurpose_c1"]')
+    spurpose.send_keys('study!!')
+    # Checks box
+    browser.execute_script(
+        "document.getElementById('bookingFormControl1_CheckBoxDisclaimer_c1').checked = 'checked';")
+
+    browser.implicitly_wait(10)
+    # Checks box
+    browser.execute_script(
+        "document.getElementById('bookingFormControl1_CheckBoxPolicy_c1').checked = 'checked';")
+    # Delay for checkboxes
+    time.sleep(1)
+
+    sconfirm = browser.find_element_by_xpath('//*[@id="panel_UIButton2"]')
+    sconfirm.click()
+    browser.implicitly_wait(10)
+    browser.delete_all_cookies()
