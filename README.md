@@ -1,12 +1,12 @@
-#Library Booking System
+# Library Booking System
 Books NP Library rooms for you! 
 
-#Features
+# Features
 - Books selected library room for you with one click
 - Reads file for usernames and password
 - Book with multiple accounts at one go
 
-#Usage
+# Usage
 Only state time in 30min intervals!
 account.csv should look something like this:
 <pre>
@@ -16,7 +16,7 @@ S10XXXXX  XXXXXXXX 1100 1330
 
 </pre>
 
-#Requirements
+# Requirements
 Use
 <pre>pip install -r requirements.txt
 </pre>
